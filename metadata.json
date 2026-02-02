@@ -1,0 +1,8 @@
+{
+  "name": "VideoExpress AI Dashboard",
+  "description": "A high-end desktop dashboard for AI video generation, voice cloning, and digital twin training, featuring Wan 2.5 and Qwen3 integrations.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "name": "videoexpress-ai",
+  "version": "1.0.0",
+  "description": "AI-powered video creation desktop app",
+  "main": ".webpack/main",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:electron\"",
+    "dev:backend": "cd backend && python -m uvicorn main:app --reload --port 8000",
+    "dev:frontend": "vite",
+    "dev:electron": "electron-forge start",
+    "build": "vite build && electron-forge make",
+    "lint": "eslint ."
+  },
+  "keywords": ["video", "ai", "electron"],
+  "author": "VideoExpress",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.2.0",
+    "@electron-forge/maker-dmg": "^7.2.0",
+    "@electron-forge/maker-squirrel": "^7.2.0",
+    "@electron-forge/plugin-webpack": "^7.2.0",
+    "@sentry/electron": "^4.17.0",
+    "@types/node": "^22.14.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vercel/webpack-asset-relocator-loader": "^1.7.3",
+    "@vitejs/plugin-react": "^5.0.0",
+    "concurrently": "^8.2.2",
+    "css-loader": "^6.8.1",
+    "electron": "^28.1.0",
+    "eslint": "^8.0.0",
+    "fork-ts-checker-webpack-plugin": "^9.0.0",
+    "node-loader": "^2.0.0",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  },
+  "config": {
+    "forge": "./forge.config.ts"
+  }
+}
