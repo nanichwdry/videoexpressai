@@ -81,9 +81,9 @@ def generate_video(prompt: str, duration: int, output_path: str, job):
     safe_progress(job, 25)
     pipe = load_pipeline()
     
-    # CogVideoX generates 49 frames (6s at 8fps)
+    # CogVideoX-2B: max 48 frames at 8fps (6 seconds)
     # For longer videos, we'll generate multiple clips and concat
-    num_frames = 49
+    num_frames = 48
     fps = 8
     
     safe_progress(job, 40)
