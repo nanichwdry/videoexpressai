@@ -1,9 +1,9 @@
 import os
 import time
 import traceback
-import runpod
-import boto3
-from botocore.exceptions import ClientError, NoCredentialsError
+import runpod  # type: ignore
+import boto3  # type: ignore
+from botocore.exceptions import ClientError, NoCredentialsError  # type: ignore
 
 # Force all temp operations to /runpod-volume
 os.environ.setdefault("TMPDIR", "/runpod-volume/tmp")
@@ -13,7 +13,7 @@ WORKER_VERSION = "v8-diskfix"
 BUILD_ID = "v8-20260201-1"
 MODEL_ID = "THUDM/CogVideoX-2b"
 
-OUTPUT_DIR = os.getenv("OUTPUT_DIR", "/runpod-volume/tmp")
+OUTPUT_DIR = os.getenv("OUTPUT_DIR", "/workspace/tmp")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # Lazy imports - only load heavy deps when needed
@@ -25,9 +25,9 @@ _pipeline_instance = None
 def lazy_import_ml():
     global _torch, _pipeline_class, _export_to_video
     if _torch is None:
-        import torch
-        from diffusers.pipelines.cogvideo import CogVideoXPipeline
-        from diffusers.utils import export_to_video
+        import torch  # type: ignore
+        from diffusers.pipelines.cogvideo import CogVideoXPipeline  # type: ignore
+        from diffusers.utils import export_to_video  # type: ignore
         _torch = torch
         _pipeline_class = CogVideoXPipeline
         _export_to_video = export_to_video
@@ -82,7 +82,19 @@ def load_pipeline():
             torch_dtype=_torch.float16,
         ).to("cuda")
         _pipeline_instance.enable_model_cpu_offload()
-        _pipeline_instance.vae.enable_slicing()
+        
+        # Safe VAE optimization
+        if hasattr(_pipeline_instance, "vae"):
+            vae = _pipeline_instance.vae
+            if hasattr(vae, "enable_slicing"):
+                vae.enable_slicing()
+                log("VAE slicing enabled")
+            elif hasattr(vae, "enable_tiling"):
+                vae.enable_tiling()
+                log("VAE tiling enabled")
+            else:
+                log("VAE slicing/tiling not supported (ok)")
+        
         log("Pipeline loaded")
     return _pipeline_instance
 
