@@ -59,7 +59,19 @@ def load_pipeline():
             torch_dtype=_torch.float16,
         ).to("cuda")
         _pipeline_instance.enable_model_cpu_offload()
-        _pipeline_instance.vae.enable_slicing()
+        
+        # Safe VAE optimization
+        vae = getattr(_pipeline_instance, "vae", None)
+        if vae is not None:
+            if hasattr(vae, "enable_slicing"):
+                vae.enable_slicing()
+                log("VAE slicing enabled")
+            elif hasattr(vae, "enable_tiling"):
+                vae.enable_tiling()
+                log("VAE tiling enabled")
+            else:
+                log("VAE slicing/tiling not supported (ok)")
+        
         log("Pipeline loaded")
     return _pipeline_instance
 
